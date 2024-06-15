@@ -75,7 +75,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "https://localhost:3000",
-    "https://elite-haven.vercel.app/",
+    "https://elite-haven.vercel.app",
 ]
 
 
