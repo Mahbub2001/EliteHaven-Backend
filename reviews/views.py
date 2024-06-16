@@ -30,5 +30,6 @@ class ReviewViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def perform_create(self, serializer):
-        serializer.save()
+        review = serializer.save()
+        review.item.save() 
 

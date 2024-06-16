@@ -1,38 +1,26 @@
 from django.contrib import admin
 from .models import Advertisement
 
-@admin.register(Advertisement)
 class AdvertisementAdmin(admin.ModelAdmin):
-    list_display = ('title', 'availability', 'city', 'country', 'price_per_day')
+    list_display = (
+        'title', 'city', 'country', 'price_per_day', 'review_count', 
+        'average_rating', 'availability'
+    )
+    search_fields = ('title', 'city', 'country')
     list_filter = ('availability', 'city', 'country')
-    search_fields = ('title', 'description', 'city', 'country')
-
+    readonly_fields = ('review_count', 'average_rating', 'comments')
+    
     fieldsets = (
         (None, {
-            'fields': ('title', 'description', 'map_location', 'availability', 'safety', 'weather','host','speciality')
+            'fields': ('host', 'title', 'description', 'map_location', 'availability', 'safety', 'weather', 
+                       'city', 'country', 'speciality', 'city_size', 'thumbnail_picture', 'price_per_day', 
+                       'price_per_month', 'price_6_months', 'price_1_year', 'rent_individual', 'groceries_individual', 
+                       'others_individual', 'total_individual', 'rent_family', 'groceries_family', 'others_family', 
+                       'total_family', 'pictures')
         }),
-        ('Location', {
-            'fields': ('city', 'country', 'city_size')
-        }),
-        ('Prices', {
-            'fields': ('price_per_day', 'price_per_month', 'price_6_months', 'price_1_year')
-        }),
-        ('Individual Expenses', {
-            'fields': ('rent_individual', 'groceries_individual', 'others_individual', 'total_individual')
-        }),
-        ('Family Expenses', {
-            'fields': ('rent_family', 'groceries_family', 'others_family', 'total_family')
-        }),
-        ('Pictures', {
-            'fields': ('thumbnail_picture',
-                        'pictures'
-                        )
+        ('Reviews', {
+            'fields': ('review_count', 'average_rating', 'comments')
         }),
     )
 
-    readonly_fields = ('pictures',)  # Assuming pictures are uploaded directly via API
-
-    def get_readonly_fields(self, request, obj=None):
-        if obj:
-            return self.readonly_fields + ('title',)
-        return self.readonly_fields
+admin.site.register(Advertisement, AdvertisementAdmin)

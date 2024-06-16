@@ -1,5 +1,5 @@
 from rest_framework import viewsets, status, filters
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from .models import Advertisement
@@ -41,10 +41,9 @@ class AdvertisementViewSet(viewsets.ModelViewSet):
 class PublicAdvertisementViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Advertisement.objects.all()
     serializer_class = AdvertisementSerializer
-    permission_classes = [] 
+    permission_classes = [AllowAny] 
     authentication_classes = []  
 
-    # Add filtering capabilities
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['title', 'city', 'country']
     ordering_fields = ['title', 'city', 'country']

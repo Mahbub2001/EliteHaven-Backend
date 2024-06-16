@@ -13,3 +13,12 @@ class Review(models.Model):
 
     def __str__(self):
         return f'Review by {self.user.username} for {self.item.title}'
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        advertisement = self.item
+        reviews = advertisement.reviews.all()
+        advertisement.review_count = reviews.count()
+        advertisement.average_rating = reviews.aggregate(models.Avg('rating'))['rating__avg']
+        advertisement.comments = [{'user': review.user.username, 'comment': review.comment, 'rating': review.rating} for review in reviews]
+        advertisement.save()

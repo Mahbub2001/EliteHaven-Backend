@@ -28,5 +28,9 @@ class Advertisement(models.Model):
     total_family = models.DecimalField(max_digits=10, decimal_places=2)
     pictures = models.JSONField(default=list) 
 
+    review_count = models.IntegerField(default=0)
+    average_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.00)
+    comments = models.JSONField(default=list)
+
     def __str__(self):
         return self.title
