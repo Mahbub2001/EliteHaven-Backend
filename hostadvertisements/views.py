@@ -7,6 +7,8 @@ from .serializers import AdvertisementSerializer
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.exceptions import ValidationError
 from django.db.models import Q
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.response import Response
 
 class AdvertisementViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated] 
@@ -39,9 +41,19 @@ class AdvertisementViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT) 
 
 
-class AdvertisementPagination(PageNumberPagination):
+class CustomPagination(PageNumberPagination):
     page_size_query_param = 'page_size'
-    max_page_size = 100  
+    max_page_size = 100
+
+    def get_paginated_response(self, data):
+        total_count = self.page.paginator.count
+        page_size = self.get_page_size(self.request)
+
+        return Response({
+            'total_count': total_count,
+            'num_pages': (total_count + page_size - 1) // page_size,
+            'results': data
+        })
 
 class PublicAdvertisementViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Advertisement.objects.all()
@@ -53,7 +65,7 @@ class PublicAdvertisementViewSet(viewsets.ReadOnlyModelViewSet):
     search_fields = ['title', 'city', 'country']
     ordering_fields = ['title', 'city', 'country']
 
-    pagination_class = AdvertisementPagination
+    pagination_class = CustomPagination  
 
     def get_queryset(self):
         queryset = self.queryset
