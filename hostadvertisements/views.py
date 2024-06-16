@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from .models import Advertisement
 from .serializers import AdvertisementSerializer
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.exceptions import ValidationError
 from django.db.models import Q
 
@@ -38,15 +39,21 @@ class AdvertisementViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT) 
 
 
+class AdvertisementPagination(PageNumberPagination):
+    page_size_query_param = 'page_size'
+    max_page_size = 100  
+
 class PublicAdvertisementViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Advertisement.objects.all()
     serializer_class = AdvertisementSerializer
-    permission_classes = [AllowAny] 
-    authentication_classes = []  
+    permission_classes = [AllowAny]
+    authentication_classes = []
 
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['title', 'city', 'country']
     ordering_fields = ['title', 'city', 'country']
+
+    pagination_class = AdvertisementPagination
 
     def get_queryset(self):
         queryset = self.queryset
