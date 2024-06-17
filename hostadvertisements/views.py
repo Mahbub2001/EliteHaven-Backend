@@ -72,6 +72,7 @@ class PublicAdvertisementViewSet(viewsets.ReadOnlyModelViewSet):
         title = self.request.query_params.get('title', None)
         city = self.request.query_params.get('city', None)
         country = self.request.query_params.get('country', None)
+        host_id = self.request.query_params.get('host_id', None)  
 
         if title:
             queryset = queryset.filter(title__icontains=title)
@@ -79,5 +80,7 @@ class PublicAdvertisementViewSet(viewsets.ReadOnlyModelViewSet):
             queryset = queryset.filter(city__icontains=city)
         if country:
             queryset = queryset.filter(country__icontains=country)
+        if host_id:
+            queryset = queryset.filter(host=host_id)
 
         return queryset
