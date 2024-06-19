@@ -4,11 +4,13 @@ from rest_framework.response import Response
 from .models import Booking
 from .serializers import BookingSerializer
 from hostadvertisements.models import Advertisement
+from rest_framework.authentication import TokenAuthentication
 
 class BookingViewSet(viewsets.ModelViewSet):
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated] 
+    authentication_classes = [TokenAuthentication] 
 
     def create(self, request, *args, **kwargs):
         user = request.user
