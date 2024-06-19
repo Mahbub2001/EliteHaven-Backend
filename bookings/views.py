@@ -29,3 +29,19 @@ class BookingViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         instance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class GetParticularUserBookings(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+
+    def list(self, request):
+        user_id = request.query_params.get('user')
+        if user_id is None:
+            return Response({"error": "User ID is required in the query parameters."}, status=400)
+        try:
+            bookings = Booking.objects.filter(user=user_id)
+            serializer = BookingSerializer(bookings, many=True)
+            return Response(serializer.data)
+        except Booking.DoesNotExist:
+            return Response({"error": "No bookings found for the provided user ID."}, status=404)
