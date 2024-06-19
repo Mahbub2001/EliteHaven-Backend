@@ -68,7 +68,7 @@ class PublicAdvertisementViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = CustomPagination  
 
     def get_queryset(self):
-        queryset = self.queryset
+        queryset = Advertisement.objects.all().order_by('-id') 
         title = self.request.query_params.get('title', None)
         city = self.request.query_params.get('city', None)
         country = self.request.query_params.get('country', None)
