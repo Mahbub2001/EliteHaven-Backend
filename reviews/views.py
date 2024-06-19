@@ -5,11 +5,13 @@ from .models import Review
 from .serializers import ReviewSerializer
 from transactions.models import Transaction
 from hostadvertisements.models import Advertisement
+from rest_framework.authentication import TokenAuthentication
 
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication] 
 
     def create(self, request, *args, **kwargs):
         user = request.user
