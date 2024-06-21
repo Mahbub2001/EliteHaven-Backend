@@ -6,6 +6,7 @@ from django.conf import settings
 from .models import Transaction
 from .serializers import TransactionSerializer
 from bookings.models import Booking
+from rest_framework.authentication import TokenAuthentication
 
 stripe.api_key = settings.STRIPE_SECRET_KEY  
 
@@ -13,6 +14,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
     permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
 
     def create(self, request, *args, **kwargs):
         user = request.user
