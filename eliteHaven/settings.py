@@ -14,11 +14,14 @@ from pathlib import Path
 import dj_database_url
 import environ
 import os
+import stripe
+
 
 
 env = environ.Env()
 environ.Env.read_env()
 
+stripe.api_key = env("STRIPE_SECRET_KEY")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -103,21 +106,24 @@ WSGI_APPLICATION = 'eliteHaven.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
-    'default': dj_database_url.config(
-        # Replace this value with your local database's connection string.
-        default='postgres://elitehavendb_user:MWRFuR9sWQc2lursZaJrW3YAc3Huk6PE@dpg-cpmrak08fa8c73an7ccg-a.oregon-postgres.render.com/elitehavendb',
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         # Replace this value with your local database's connection string.
+#         default='postgres://elitehavendb_user:MWRFuR9sWQc2lursZaJrW3YAc3Huk6PE@dpg-cpmrak08fa8c73an7ccg-a.oregon-postgres.render.com/elitehavendb',
+#     )
+# }
+
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
@@ -173,5 +179,5 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER =env("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 
-STRIPE_SECRET_KEY = env("STRIPE_SECRET")
-STRIPE_PUBLISHABLE_KEY = env("STRIPE_PUBLISHABLE")
+STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY")
+STRIPE_PUBLISHABLE_KEY = env("STRIPE_PUBLISHABLE_KEY")
